@@ -30,8 +30,7 @@ This architecture enables secure, verifiable blob storage with complete offline 
 - **gRPC**: High-performance RPC framework with HTTP/2 support
 - **Protocol Buffers**: Efficient serialisation with strong typing via [Buf](https://buf.build/)
 - **PostgreSQL**: Robust relational database for blob storage
-- **RSA Cryptography**: Industry-standard digital signatures (PKCS#1 v1.5, 2048-bit keys)
-
+- **RSA Cryptography**: Industry-standard digital signatures (RSASSA-PSS, PKCS#1 v2.1)
 ### Development & Operations
 - **Docker Compose**: Multi-service development environment
 - **Testcontainers**: Isolated integration testing with real PostgreSQL instances
