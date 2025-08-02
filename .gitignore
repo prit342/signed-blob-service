@@ -1,0 +1,90 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# Go workspace file
+go.work
+
+# Built applications
+client
+server
+sign-blob-client
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment files (keep sample files)
+.env
+.env.local
+.env.production
+.env.development
+
+# Cryptographic keys (security sensitive)
+private_key.pem
+public_key.pem
+*.key
+*.crt
+*.pem
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker volumes and data
+pgdata/
+postgres-data/
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Protocol Buffer generated files (optional - some prefer to commit these)
+# Uncomment the lines below if you want to ignore generated protobuf files
+# *.pb.go
+# *_grpc.pb.go
+
+# Test coverage
+coverage.out
+coverage.html
+
+# Dependency management
+go.sum.backup
+
+# Build artifacts
+dist/
+build/
+
+# Local development tools
+buf
+grpcurl

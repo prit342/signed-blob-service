@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package blob.v1;
+
+option go_package = "github.com/prit342/signed-blob-service/gen/blob/v1;blobv1";
+
+
+
+// Client sends a raw text blob to be signed and stored.
+message StoreBlobRequest {
+  string blob = 1; // Raw user input (UTF-8 text blob)
+}
+
+// Server responds with the UUID assigned to the stored and signed blob.
+// the UUID is used for future retrieval and verification.
+message StoreBlobResponse {
+  string uuid = 1; // UUID used to identify and retrieve the blob
+}
+
+// The canonical structure representing a stored blob, including:
+// - The original blob content
+// - Its hash (SHA-256, hex-encoded)
+// - The assigned UUID
+// - The timestamp when it was signed (RFC3339, string for canonicalisation)
+// This structure is serialised, signed, and stored in the database as-is.
+message BlobRecord {
+  string uuid = 1;      // Server-generated UUID for identification
+  string blob = 2;      // Original user-submitted blob
+  string hash = 3;      // SHA-256 hash of the blob, hex-encoded
+  string timestamp = 4; // RFC3339 formatted timestamp (e.g., "2025-07-28T17:42:05Z")
+}
+
+// Client requests a previously stored blob by UUID.
+message GetSignedBlobRequest {
+  string uuid = 1; // UUID of the blob to retrieve
+}
+
+// Server responds with:
+// - The exact payload it signed (BlobRecord)
+// - The digital signature over the Protobuf-encoded BlobRecord
+message GetSignedBlobResponse {
+  BlobRecord payload = 1; // The canonical, signed structure
+  bytes signature = 2;    // RSA signature of the BlobRecord payload
+}
+
+// same as GetSignedBlobResponse, but with a different name for clarity
+message SignedBlobRecord {
+  BlobRecord payload = 1; // The canonical, signed structure
+  bytes signature = 2;    // RSA signature of the BlobRecord payload
+}
+
+// Client requests the public key used for signing blobs.
+message GetPublicKeyRequest {
+  // Empty request
+}
+
+// Server responds with the public key in PEM format.
+message GetPublicKeyResponse {
+  string public_key = 1; // PEM-encoded RSA public key
+}
+
+// ==== Service Definition ====
+service BlobService {
+  // Accepts a raw text blob, returns a UUID.
+  // Server computes hash, timestamp, UUID, and signs the full BlobRecord before storing.
+  rpc StoreBlob(StoreBlobRequest) returns (StoreBlobResponse);
+  
+  // Retrieves the previously signed payload and its signature by UUID.
+  // Client can then verify the signature over the returned payload.
+  rpc GetSignedBlob(GetSignedBlobRequest) returns (GetSignedBlobResponse);
+  
+  // Returns the public key used for signing blobs.
+  // useful for clients to verify signatures.
+  rpc GetPublicKey(GetPublicKeyRequest) returns (GetPublicKeyResponse);
+}

@@ -1,0 +1,15 @@
+# For details on buf.yaml configuration, visit https://buf.build/docs/configuration/v2/buf-yaml
+version: v2
+lint:
+  use:
+    - STANDARD
+    - SERVICE_SUFFIX
+breaking:
+  use:
+    - FILE
+    - WIRE_JSON
+    - PACKAGE
+
+## this is our proto definitions live
+modules:
+  - path: proto

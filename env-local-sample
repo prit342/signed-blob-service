@@ -1,0 +1,21 @@
+# PostgreSQL configuration
+POSTGRES_USER=blob_user           # Database user
+POSTGRES_PASSWORD=blob_pass       # Database password
+POSTGRES_DB=blob_db               # Database name
+POSTGRES_PORT=5432                # Database port
+POSTGRES_HOST=postgres            # Database host (service name in Docker Compose)
+POSTGRES_SSLMODE=disable          # SSL mode for PostgreSQL
+
+# PostgreSQL Data Source Name (DSN)
+DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=${POSTGRES_SSLMODE}
+
+# Application network configuration
+APP_PORT="55555"                 # Port exposed by the application container
+LISTEN_ADDR="0.0.0.0:55555"      # Address and port the application listens on
+
+# Database migration settings
+DATABASE_MIGRAGE="true"  # Enable database migration on startup
+MIGRATION_DIR="/db-migrations/postgres" # Directory containing migration files (absolute path in container)
+
+# Security and cryptography
+PRIVATE_KEY_PATH="/app/private_key.pem" # Path to RSA private key file (absolute path in container)

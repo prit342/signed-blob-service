@@ -1,0 +1,30 @@
+version: v2
+
+managed:
+  enabled: true
+  disable:
+    - file_option: go_package
+      module: buf.build/bufbuild/protovalidate
+
+plugins:
+  # not using remote plugins currently
+  #
+  # Remote plugins (commented out)
+  # - remote: buf.build/protocolbuffers/go:v1.36.5
+  #   out: ./api
+  #   opt:
+  #     - paths=source_relative
+  # - remote: buf.build/grpc/go:v1.5.1
+  #   out: ./api
+  #   opt:
+  #     - paths=source_relative
+  
+  # Local plugins (using local protoc)
+  - local: protoc-gen-go
+    out: ./gen
+    opt:
+      - paths=source_relative
+  - local: protoc-gen-go-grpc
+    out: ./gen
+    opt:
+      - paths=source_relative
