@@ -7,7 +7,6 @@ The system provides both server-side storage and a command-line client for seaml
 - **`<uuid>.txt`** - The original blob content
 - **`<uuid>.sig`** - Base64-encoded RSA-PSS signature  
 - **`<uuid>.meta.json`** - Metadata with UUID, SHA-256 hash, and timestamp
-- **`public.pem`** - Server's public key for offline signature verification
 
 This architecture enables secure, verifiable blob storage with complete offline verification capabilities using industry-standard cryptographic methods.
 
@@ -26,7 +25,7 @@ This architecture enables secure, verifiable blob storage with complete offline 
 ## 🧱 Tech Stack
 
 ### Backend
-- **Go 1.24+**: Modern, performant backend language
+- **Go 1.22+**: Modern, performant backend language
 - **gRPC**: High-performance RPC framework with HTTP/2 support
 - **Protocol Buffers**: Efficient serialisation with strong typing via [Buf](https://buf.build/)
 - **PostgreSQL**: Robust relational database for blob storage
@@ -244,3 +243,4 @@ MIT License
 - **TLS Mutual Authentication**: Client certificate validation for enhanced security
 - **Caching Layer**: Redis integration for frequently accessed blobs and public keys
 - **REST API**: Optional HTTP REST interface alongside gRPC for broader client compatibility
+- **Go Tool**: Use `go tool` for installing various command line utilities and migrate to go 1.24
