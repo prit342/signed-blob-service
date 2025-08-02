@@ -164,3 +164,12 @@ func pingWithRetry(
 	}
 
 }
+
+// Ping checks if the storage is reachable
+func (s *PostgresStorage) Ping(ctx context.Context) error {
+	if _, err := s.db.ExecContext(ctx, selectTimeQuery); err != nil {
+		s.log.Error("failed to ping database", "error", err)
+		return fmt.Errorf("failed to ping database: %w", err)
+	}
+	return nil
+}

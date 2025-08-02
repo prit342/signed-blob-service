@@ -204,7 +204,6 @@ echo hello-world > /tmp/test.txt
 
 ```bash
 ❯ mkdir downloads  
-
 ❯ ./client --server localhost:55555 get 9de22b2a-9d35-42d8-8b7e-fd2570aca13b --dir ./downloads 
 2025/08/02 11:40:44 ✅ Blob content saved to: ./downloads/9de22b2a-9d35-42d8-8b7e-fd2570aca13b.txt
 2025/08/02 11:40:44 ✅ Signature saved to:    ./downloads/9de22b2a-9d35-42d8-8b7e-fd2570aca13b.sig
@@ -221,7 +220,7 @@ echo hello-world > /tmp/test.txt
 - Verify the downloaded files using the local public key (offline verification):
 
 ```bash
-./client --server localhost:55555 verify 9de22b2a-9d35-42d8-8b7e-fd2570aca13b --dir downloads --public-key public.pem
+./client verify 9de22b2a-9d35-42d8-8b7e-fd2570aca13b --dir downloads --public-key public.pem
 2025/08/02 11:43:37 ✅ Hash matches: d79f2e37784e5cd8631963896ebc6c9c66934af94a1854504717eaec04bc3d09
 2025/08/02 11:43:37 ✅ Signature verification successful!
 ```

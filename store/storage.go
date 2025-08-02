@@ -26,4 +26,6 @@ type Storage interface {
 	Delete(ctx context.Context, uuid uuid.UUID) error
 	// Migrate helps migrate database schema using migration files in the directory
 	Migrate(ctx context.Context, directory string) error
+	// Ping checks if the storage is reachable
+	Ping(ctx context.Context) error
 }

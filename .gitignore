@@ -88,3 +88,6 @@ build/
 # Local development tools
 buf
 grpcurl
+
+### per files
+*.pem

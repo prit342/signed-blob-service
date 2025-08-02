@@ -7,17 +7,13 @@ services:
     restart: unless-stopped
     env_file:
       - env-local-sample
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -30,14 +26,12 @@ services:
         - GOFLAGS=-mod=vendor
     container_name: blob_server
     restart: unless-stopped
-    env_file:
-      - env-local-sample
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      LISTEN_ADDR: ${LISTEN_ADDR}
-      MIGRATION_DIR: ${MIGRATION_DIR}
+    # not needed as the application should read .env file
+    # in the /app/.env
+    # env_file:
+    #   - env-local-sample
     ports:
-      - "${APP_PORT:-55555}:55555"
+      - "55555:55555"
     depends_on:
       postgres:
         condition: service_healthy
