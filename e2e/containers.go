@@ -6,8 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
+	pgc "github.com/testcontainers/testcontainers-go/modules/postgres"
 )
 
 // RunPostgresContainer creates a postgres container
@@ -21,38 +20,28 @@ func RunPostgresContainer(
 	dbName string,
 ) (string, string, func()) {
 	t.Helper()
-	// define context
 
-	req := testcontainers.ContainerRequest{
-		Image:        postgresImage,
-		ExposedPorts: []string{"5432/tcp"},
-		WaitingFor:   wait.ForLog(logMsg),
-		Env: map[string]string{
-			"POSTGRES_PASSWORD": dbPass,
-			"POSTGRES_USER":     dbUser,
-			"POSTGRES_DB":       dbName,
-		},
-	}
-
-	pgC, err := testcontainers.GenericContainer(ctx,
-		testcontainers.GenericContainerRequest{
-			ContainerRequest: req,
-			Started:          true,
-		},
+	postgresContainer, err := pgc.Run(ctx,
+		"postgres:16-alpine",
+		pgc.WithDatabase(dbName),
+		pgc.WithUsername(dbUser),
+		pgc.WithPassword(dbPass),
 	)
+
 	require.NoError(t, err, "error starting postgres container")
-	dbHost, err := pgC.Host(ctx)
+	dbHost, err := postgresContainer.Host(ctx)
 	require.NoError(t, err, "error getting the postgres container host")
 
-	mappedPort, err := pgC.MappedPort(ctx, "5432")
+	mappedPort, err := postgresContainer.MappedPort(ctx, "5432")
 	require.NoError(t, err, "error getting the mapped port for postgres container")
 	dbPort := mappedPort.Port()
 	_, err = strconv.Atoi(dbPort)
 	require.NoError(t, err, "error converting port to int")
 
 	return dbHost, dbPort, func() {
-		//err := pgC.Terminate(ctx)
-		//require.NoError(t, err, "error terminating postgres container")
+		err := postgresContainer.Terminate(ctx)
+		require.NoError(t, err, "error terminating postgres container")
+		t.Logf("Postgres container terminated successfully")
 	}
 
 }
