@@ -54,7 +54,7 @@ o7IkTkfGGl5OBBs66IefNY9ZewQor9se5iH1A42DnQ1lh4mtzmB7rg==
 // Database configuration constants
 const (
 	// PostgreSQL container configuration
-	postgresImage    = "postgres:16"
+	postgresImage    = "postgres:16-alpine@sha256:dca9c7aa70c71caf8bcc48c8ec40658c1fdf2d1e4e8d26bc27d4d18e030d779a"
 	postgresUser     = "testUser"
 	postgresPassword = "testPassword"
 	postgresDB       = "tesDB"

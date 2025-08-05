@@ -27,7 +27,7 @@ type PostgresStorage struct {
 func NewPostgresStorage(
 	dsn string, // Data Source Name for PostgreSQL connection
 	log *slog.Logger, // Logger for logging
-	retryInterval time.Duration, // Time when the database is expected to be ready
+	retryInterval time.Duration, // retryInterval for pinging the database
 	maxReadyDuration time.Duration, // Maximum duration to wait for the database to be ready
 ) (*PostgresStorage, error) {
 	// validate the DSN and logger
