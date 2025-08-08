@@ -19,6 +19,7 @@ linters:
   default: all
 
   disable:
+    - noinlineerr
     - depguard
     - wsl_v5
     - wsl
@@ -26,3 +27,4 @@ linters:
     - whitespace
     - varnamelen
     - unused
+    - funlen

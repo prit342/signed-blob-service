@@ -2,15 +2,15 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:16-alpine@sha256:dca9c7aa70c71caf8bcc48c8ec40658c1fdf2d1e4e8d26bc27d4d18e030d779a
+    image: postgres:16-alpine
     container_name: blob_postgres
     restart: unless-stopped
     env_file:
       - env-local-sample
     ports:
       - "${POSTGRES_PORT}:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+    # volumes:
+    #   - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
       interval: 10s
@@ -40,5 +40,5 @@ services:
       - ./env-local-sample:/app/.env:ro
       - ./db-migrations:/db-migrations:ro
 
-volumes:
-  pgdata:
+# volumes:
+#   pgdata:

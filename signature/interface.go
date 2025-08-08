@@ -1,5 +1,6 @@
 package signature
 
+// Signer interface defines the methods for signing and verifying data.
 type Signer interface {
 	// Sign - signs the given blob content and returns the signature
 	Sign(blobContent []byte) ([]byte, error)

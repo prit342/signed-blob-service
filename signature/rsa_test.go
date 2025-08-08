@@ -1,6 +1,5 @@
 package signature
 
-// create a new File that contains RSA signing and verification functionality
 import (
 	"crypto/rand"
 	"crypto/rsa"
@@ -14,30 +13,38 @@ import (
 // helper function to generate a new RSA key pair
 // reference -> https://stackoverflow.com/questions/13555085/save-and-load-crypto-rsa-privatekey-to-and-from-the-disk
 func generateRsaKeyPair(t *testing.T) (*rsa.PrivateKey, *rsa.PublicKey) {
+	t.Helper() // mark this function as a test helper
 	privkey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
 		t.Fatalf("failed to generate RSA key pair: %v", err)
 	}
+
 	return privkey, &privkey.PublicKey
 }
 
 func writeRsaPrivateKeyAsPemStringToFile(t *testing.T, privkey *rsa.PrivateKey, filename string) {
-	privkey_bytes := x509.MarshalPKCS1PrivateKey(privkey)
-	privkey_pem := pem.EncodeToMemory(
+	t.Helper() // mark this function as a test helper
+	privkeyBytes := x509.MarshalPKCS1PrivateKey(privkey)
+
+	privkeyPem := pem.EncodeToMemory(
 		&pem.Block{
-			Type:  "RSA PRIVATE KEY",
-			Bytes: privkey_bytes,
+			Type:    "RSA PRIVATE KEY",
+			Bytes:   privkeyBytes,
+			Headers: map[string]string{},
 		},
 	)
-	if privkey_pem == nil {
+	if privkeyPem == nil {
 		t.Fatalf("failed to encode private key to PEM format")
 	}
-	if err := os.WriteFile(filename, privkey_pem, 0600); err != nil {
+	err := os.WriteFile(filename, privkeyPem, 0600)
+	if err != nil {
 		t.Fatalf("failed to write private key to file: %v", err)
 	}
 }
 
 func TestNewRSASignerServiceFromFile(t *testing.T) {
+	// run tests in parallel to speed up execution
+	t.Parallel() // run tests in parallel to speed up execution
 	tests := []struct {
 		name          string
 		setupFile     func(t *testing.T) string
@@ -46,13 +53,15 @@ func TestNewRSASignerServiceFromFile(t *testing.T) {
 	}{
 		{
 			name: "file exists with valid RSA key",
-			setupFile: func(t *testing.T) string {
+			setupFile: func(_ *testing.T) string {
 				privkey, _ := generateRsaKeyPair(t)
 				filename := "test_valid_rsa.pem"
 				writeRsaPrivateKeyAsPemStringToFile(t, privkey, filename)
+
 				return filename
 			},
-			expectError: false,
+			expectError:   false,
+			errorContains: "",
 		},
 		{
 			name: "file does not exist",
@@ -65,13 +74,15 @@ func TestNewRSASignerServiceFromFile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		tt := tt // capture range variable, not needed in new Go versions
+
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			// Setup
 			filename := tt.setupFile(t)
 			// Cleanup after test
 			defer func() {
 				if _, err := os.Stat(filename); err == nil {
-					os.Remove(filename)
+					_ = os.Remove(filename)
 				}
 			}()
 			// test
@@ -84,6 +95,7 @@ func TestNewRSASignerServiceFromFile(t *testing.T) {
 				if tt.errorContains != "" && !strings.Contains(err.Error(), tt.errorContains) {
 					t.Fatalf("expected error to contain %q but got %q", tt.errorContains, err.Error())
 				}
+
 				return
 			}
 
@@ -100,7 +112,7 @@ func TestNewRSASignerServiceFromFile(t *testing.T) {
 	}
 }
 
-func TestRSASignerService_SignWithSHA256PKCS1v15(t *testing.T) {
+func TestRSASignerService_Sign(t *testing.T) {
 	// Setup: Create a signer service with test keys
 	privkey, _ := generateRsaKeyPair(t)
 	signer := &RSASignerService{
@@ -143,12 +155,14 @@ func TestRSASignerService_SignWithSHA256PKCS1v15(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt // capture range variable, not needed in new Go versions
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			signature, err := signer.Sign(tt.blobContent)
 
 			if tt.expectError {
 				if err == nil {
 					t.Fatal("expected error but got none")
 				}
+
 				return
 			}
 
@@ -181,6 +195,7 @@ func TestRSASignerService_SignWithSHA256PKCS1v15(t *testing.T) {
 }
 
 func TestRSASignerService_SignWithSHA256PKCS1v15_NilPrivateKey(t *testing.T) {
+	t.Parallel()
 	// Test with nil private key
 	signer := &RSASignerService{
 		privateKey: nil,

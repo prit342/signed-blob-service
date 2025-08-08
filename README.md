@@ -212,7 +212,7 @@ echo hello-world > /tmp/test.txt
 ```
 - Download public key from the server:
 ```bash
-❯ ./client --server localhost:55555 get-public-key public.pem                                 
+❯ ./client --server localhost:55555 get-public-key public.pem
 2025/08/02 11:41:50 ✅ Public key saved to file: public.pem
 
 ```

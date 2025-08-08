@@ -4,7 +4,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create table for storing signed blobs
-CREATE TABLE signed_blobs (
+CREATE TABLE IF NOT EXISTS signed_blobs (
     uuid UUID PRIMARY KEY,
     blob TEXT NOT NULL,
     hash VARCHAR(64) NOT NULL,

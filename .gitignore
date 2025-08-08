@@ -18,7 +18,7 @@ vendor/
 go.work
 
 # Built applications
-client
+/client
 server
 sign-blob-client
 
@@ -91,3 +91,7 @@ grpcurl
 
 ### per files
 *.pem
+
+## ignore downloaded files
+downloads
+cmd/downloads
